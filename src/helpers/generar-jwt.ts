@@ -1,10 +1,8 @@
-/* eslint-disable prefer-promise-reject-errors */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import jwt from 'jsonwebtoken'
 
-export const generarJWT = async (data: string, data2: string) => {
+export const generarJWT = async (uuid: string, cod_rol: number) => {
   return await new Promise((resolve, reject) => {
-    const payload = { data, data2 }
+    const payload = { uuid, cod_rol }
     jwt.sign(payload, process.env.SECRET_JWT ?? '', {
       expiresIn: '4h'
     }, (err, token) => {

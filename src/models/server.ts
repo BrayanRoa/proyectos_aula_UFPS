@@ -1,8 +1,13 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import express, { Application } from 'express'
 import cors from 'cors'
-import ejemploRouter from '../routes/ejemplo.routes'
+// import personaRouter from '../routes/persona.routes'
 import { sequelize } from '../db/conexion'
+
+//* IMPORTACIONES INTERNAS
+import "../db/relaciones";
+import "../helpers/expandir.express"
+import authRouter from "../routes/auth.routes";
 
 export class Server {
   private readonly app: Application
@@ -13,7 +18,8 @@ export class Server {
     this.app = express()
     this.PORT = process.env.PORT ?? '3000'
     this.rutas = {
-      ejemplo: '/api/ejemplo'
+      auth: '/api/auth',
+      registro: '/api/registroPersona'
     }
 
     this.db()
@@ -36,7 +42,7 @@ export class Server {
   }
 
   private routes () {
-    this.app.use(this.rutas.ejemplo, ejemploRouter)
+    this.app.use(this.rutas.auth, authRouter)
   }
 
   listen () {
