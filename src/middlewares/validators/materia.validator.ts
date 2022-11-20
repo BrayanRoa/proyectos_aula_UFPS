@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { check, param } from "express-validator";
+import { check } from "express-validator";
 import {
   existeAsignatura,
   existeGrupo,
@@ -18,10 +18,10 @@ export const validarMateria = [
 
 //* TODO: VALIDAR QUE SEA DOCENTE QUIEN CREA EL GRUPO
 export const registroGrupo = [
-  param("cod_asignatura").custom((asignatura) =>
+  check("cod_asignatura").custom((asignatura) =>
     puedoAgregarGrupoMateria(asignatura)
   ),
-  check("nombre_grupo").custom((grupo) => existeGrupo(grupo, "grupo")),
+  check("nombre").custom((grupo) => existeGrupo(grupo, "grupo")),
   (req: Request, res: Response, next: NextFunction) => {
     validarCampos(req, res, next);
   },
