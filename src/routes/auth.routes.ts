@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { login, registroProfesor } from '../controllers/auth.controller'
-import { crearProfesor } from '../middlewares/validators/loginPersona'
+import { crearProfesor } from '../middlewares/validators/login.validator'
 import { validarJWT } from '../middlewares/validar-jwt';
 
 const router = Router()

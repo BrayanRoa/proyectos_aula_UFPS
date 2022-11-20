@@ -8,6 +8,7 @@ import { sequelize } from '../db/conexion'
 import "../db/relaciones";
 import "../helpers/expandir.express"
 import authRouter from "../routes/auth.routes";
+import materiasRouter from "../routes/materias.routes";
 
 export class Server {
   private readonly app: Application
@@ -19,7 +20,7 @@ export class Server {
     this.PORT = process.env.PORT ?? '3000'
     this.rutas = {
       auth: '/api/auth',
-      registro: '/api/registroPersona'
+      materias: '/api/materias'
     }
 
     this.db()
@@ -43,6 +44,7 @@ export class Server {
 
   private routes () {
     this.app.use(this.rutas.auth, authRouter)
+    this.app.use(this.rutas.materias, materiasRouter)
   }
 
   listen () {
