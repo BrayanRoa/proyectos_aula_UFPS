@@ -39,11 +39,15 @@ const getAlumnos = async(materia:string, grupo:string)=>{
       where:{cod_asignatura:materia},
       include:[{
         model:Grupo,
+        attributes:['cod_grupo','nombre'],
         where:{nombre:grupo},
         include:[{
           model:Persona,
           attributes:['nombres', 'apellidos', 'codigo', 'correo_institucional'],
           required:true,
+          through:{
+            attributes:[]
+          }
         }]
       }]
     })

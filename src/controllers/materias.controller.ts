@@ -45,9 +45,7 @@ const obtenerAlumnosMateriaGrupo = async(req:Request, res:Response)=>{
     try {
         const { materia, grupo } = req.params
         const asignatura = await getAlumnos(materia, grupo);
-        res.status(200).json({
-            asignatura
-        })
+        res.status(200).json(...asignatura)
     } catch (error:any) {
         res.status(400).json({
             error:error.message
