@@ -26,3 +26,11 @@ export const registroGrupo = [
     validarCampos(req, res, next);
   },
 ];
+
+export const validarExcelEstudiantes = [
+  param('asignatura').custom((cod)=> existeAsignatura(cod, 'materia')),
+  param('grupo').custom((grupo)=> existeGrupo(grupo, 'materia')),
+  (req: Request, res: Response, next: NextFunction) => {
+    validarCampos(req, res, next);
+  },
+]

@@ -51,7 +51,6 @@ const existeProfesorEnGrupo = async (
       },
     ],
   });
-  console.log({existe})
   return (existe.length === 0) ? false : true;
 };
 
