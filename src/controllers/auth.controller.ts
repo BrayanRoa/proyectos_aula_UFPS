@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { loginPersona, postProfesor } from "../services/auth.service";
 
 const login = async (req: Request, res: Response) => {
-  const { correo_institucional } = req.body;
+  const { correo_institucional } = req.params;
   try {
     const [persona, token] = await loginPersona(correo_institucional);
     res.status(200).json({

@@ -11,6 +11,17 @@ const validarCampos = (req: Request, res: Response, next: NextFunction) => {
   next()
 }
 
+const validarRolDocente = (req:Request, res:Response, next:NextFunction)=>{
+	console.log(req.persona.cod_rol);
+	if(req.persona.cod_rol !== 1){
+        return res.status(401).json({
+            msg:`No es un Docente - No tiene los permisos necesarios`
+        })
+    }
+    next()
+}
+
 export {
-  validarCampos
+  validarCampos,
+  validarRolDocente
 }

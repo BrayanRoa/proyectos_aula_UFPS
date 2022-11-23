@@ -1,14 +1,20 @@
-import { Router } from 'express'
-import { login, registroProfesor } from '../controllers/auth.controller'
-import { crearProfesor } from '../middlewares/validators/login.validator'
-import { validarJWT } from '../middlewares/validar-jwt';
+import { Router } from "express";
+import { login, registroProfesor } from "../controllers/auth.controller";
+import { crearProfesor } from "../middlewares/validators/login.validator";
+import { validarJWT } from "../middlewares/validar-jwt";
+import { validarRolDocente } from "../middlewares/validar-campos";
 
-const router = Router()
+const router = Router();
 
 //* 🉑 INICIAR SESIÓN
-router.post('/login', login)
+router.post("/login/:correo_institucional", login);
 
-//* ⚠️ VALIDAR QUE NO EXISTA YA ESA PERSONA EN LA BD
-router.post('/registroProfesor',[validarJWT], crearProfesor, registroProfesor)
+//** SOLO PUEDE REGISTRAR DOCENTES OTRO DOCENTE */
+router.post(
+  "/registroProfesor",
+  [validarJWT, validarRolDocente], //👮
+  crearProfesor,
+  registroProfesor
+);
 
-export default router
+export default router;

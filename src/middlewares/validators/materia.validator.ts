@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { check } from "express-validator";
+import { check, param } from "express-validator";
 import {
   existeAsignatura,
   existeGrupo,
@@ -26,3 +26,24 @@ export const registroGrupo = [
     validarCampos(req, res, next);
   },
 ];
+
+export const validarExcelEstudiantes = [
+  param('asignatura').custom((cod)=> puedoAgregarGrupoMateria(cod)),
+  param('grupo').custom((grupo)=> existeGrupo(grupo)),
+  (req: Request, res: Response, next: NextFunction) => {
+    validarCampos(req, res, next);
+  },
+]
+
+// export const validarRegistroAlumno = [
+//   check("nombres", "Los nombres son requeridos").not().isEmpty(),
+//   check("apellidos", "Los apellidos son requeridos").not().isEmpty(),
+//   check("correo_institucional").custom((correo_int) =>
+//     existeCorreoInstitucional(correo_int)
+//   ),
+//   check("codigo").custom((codigo) => existeCodigo(codigo)),
+//   check("cod_rol", "el rol es requerido").notEmpty(),
+//   (req: Request, res: Response, next: NextFunction) => {
+//     validarCampos(req, res, next);
+//   },
+// ]

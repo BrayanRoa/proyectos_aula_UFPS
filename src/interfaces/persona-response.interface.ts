@@ -10,8 +10,8 @@ export interface PersonaResponse {
     correo_institucional:  string;
     nombres:               string;
     apellidos:             string;
-    cod_tipo_doc:          number | null;
-    cod_rol:               number | null;
+    cod_tipo_doc?:         number | null;
+    cod_rol:               number;
     codigo:                string;
     correo_personal?:      null | string;
     documento?:            null | string;

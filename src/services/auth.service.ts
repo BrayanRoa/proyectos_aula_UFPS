@@ -1,10 +1,11 @@
 import { sequelize } from "../db/conexion";
 import Persona from "../db/models/Persona";
 import { generarJWT } from "../helpers/generar-jwt";
+
 import {
-  // PersonaResponse,
   ProfesorGrupo,
 } from "../interfaces/persona-response.interface";
+
 import Grupo from "../db/models/Grupo";
 
 const loginPersona = async (correo_institucional: string) => {
@@ -51,13 +52,8 @@ const existeProfesorEnGrupo = async (
       },
     ],
   });
-  console.log({existe})
   return (existe.length === 0) ? false : true;
 };
 
-// const personaPorCorreo = async (correo: string): Promise<boolean> => {
-//   const existe = await Persona.findByPk(correo);
-//   return existe ? true : false;
-// };
 
 export { loginPersona, postProfesor };
