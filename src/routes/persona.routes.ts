@@ -1,10 +1,15 @@
-import { Router } from 'express'
-import { findAll } from '../controllers/ejemplo.controller'
+import { Router } from "express";
+import { actualizarPersona } from "../controllers/persona.controller";
+import { validarJWT } from "../middlewares/validar-jwt";
+import { validarPersona } from "../middlewares/validators/persona.validators";
 
-const router = Router()
+const router = Router();
 
-router.get('/', findAll)
+router.patch("/:codigo", [validarJWT], validarPersona, actualizarPersona);
+
+// router.patch("/:codigo", [validarJWT], validarPersona, actualizarFotoPerfil);
+
 
 // router.post('/')
 
-export default router
+export default router;

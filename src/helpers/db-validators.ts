@@ -14,12 +14,14 @@ export const existeCorreoInstitucional = async (correo:string, condicion='')=>{
     }
 }
 
-export const existeCodigo = async (codigo:string)=>{
+export const existeCodigo = async (codigo:string, condicion='')=>{
     const existe = await Persona.findOne({
         where:{codigo}
     })
-    if(existe){
+    if(existe && condicion === ''){
         throw new Error(`Ya existe el código ${codigo}`)
+    }else if(!existe && condicion === 'actualizarPersona'){
+        throw new Error(`No existe una persona con código: ${codigo}`)
     }
 }
 

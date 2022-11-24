@@ -8,6 +8,7 @@ import {
 
 import Grupo from "../db/models/Grupo";
 
+
 const loginPersona = async (correo_institucional: string) => {
   let persona = await Persona.findByPk(correo_institucional);
 

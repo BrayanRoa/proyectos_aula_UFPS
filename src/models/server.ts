@@ -9,7 +9,8 @@ import "../db/relaciones";
 import "../helpers/expandir.express";
 import authRouter from "../routes/auth.routes";
 import materiasRouter from "../routes/materias.routes";
-
+import personaRouter from "../routes/persona.routes";
+import cloudinary from "../helpers/cloudinary";
 export class Server {
   private readonly app: Application;
   private readonly PORT: string;
@@ -21,6 +22,7 @@ export class Server {
     this.rutas = {
       auth: "/api/auth",
       materias: "/api/materias",
+      persona: "/api/persona"
     };
 
     this.db();
@@ -46,11 +48,15 @@ export class Server {
         tempFileDir: "/tmp/",
       })
     );
+    cloudinary.config({
+      secure: true
+    });
   }
 
   private routes() {
     this.app.use(this.rutas.auth, authRouter);
     this.app.use(this.rutas.materias, materiasRouter);
+    this.app.use(this.rutas.persona, personaRouter) //* TODO: COLOCAR LA RUTA AQUÍ
   }
 
   listen() {
