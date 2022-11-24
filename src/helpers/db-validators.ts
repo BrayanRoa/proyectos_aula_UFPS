@@ -1,6 +1,7 @@
 import Asignatura  from "../db/models/Asignatura"
 import Grupo  from "../db/models/Grupo"
 import Persona  from "../db/models/Persona"
+import Proyecto from '../db/models/Proyecto';
 
 let auxCodAsig:string = '';
 
@@ -77,5 +78,16 @@ export const puedoAgregarGrupoMateria = async(codigo:string)=>{
 
     if(!existe){
         throw new Error(`No existe asignatura con codigo ${codigo}`)
+    }
+}
+
+export const existeProyecto = async(proyecto:string)=>{
+    
+    const existe = await Proyecto.findOne({
+        where:{nombres:proyecto}
+    })
+
+    if(existe){
+        throw new Error (`Ya existe un proyecto con nombre: ${proyecto}`)
     }
 }

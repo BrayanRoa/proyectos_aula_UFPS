@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 
 import { 
     getAlumnos, 
+    getAlumnosProyecto, 
     getMaterias, 
     postAlumno, 
     postExcelAlumnos, 
@@ -106,13 +107,28 @@ const registrarProyecto = async(req:Request, res:Response)=>{
     try {
         const { asignatura, grupo } = req.params
         const proyecto = req.body
-        const regProyecto = await postProyecto(asignatura, grupo, proyecto)
+        await postProyecto(asignatura, grupo, proyecto)
         res.status(201).json({
-            regProyecto
+            msg:`Proyecto agregado con exito!!!`
         })
     } catch (error:any) {
         res.status(400).json({
             error:error.message
+        })
+    }
+}
+
+const obtenerAlumnosProyecto = async (req:Request, res:Response)=>{
+    try {
+        const { asignatura, grupo, cod_proyecto } = req.params
+        const alumnosProyecto = await getAlumnosProyecto(asignatura, grupo, +cod_proyecto)
+
+        res.status(200).json({
+            alumnosProyecto
+        })
+    } catch (error:any) {
+        res.status(400).json({
+            err:error.message
         })
     }
 }
@@ -124,5 +140,6 @@ export {
     obtenerAlumnosMateriaGrupo, 
     registrarExcelAlumnos,
     registroAlumno,
-    registrarProyecto
+    registrarProyecto,
+    obtenerAlumnosProyecto
 }

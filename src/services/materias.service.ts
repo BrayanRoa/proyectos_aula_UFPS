@@ -15,8 +15,7 @@ import { File } from "../interfaces/file-upload.interface";
 import Persona from "../db/models/Persona";
 import Grupo from "../db/models/Grupo";
 import { PersonaResponse } from "../interfaces/persona-response.interface";
-import { __String } from "typescript";
-import { ProyectoResponse } from '../interfaces/proyecto-response';
+import { ProyectoResponse } from "../interfaces/proyecto-response";
 import Proyecto from "../db/models/Proyecto";
 
 //* TODO:  AQUI TENGO UNA DUDA, POR ALGÚN MOTIVO QUE NO RECUERDO CUANDO CREO LA MATERIA REGISTRO A LA PERSONA QUE LA CREO EN ELLA
@@ -88,7 +87,7 @@ const postExcelAlumnos = async (
   const nombreArchivo = await validarArchivo(file);
   const pathArchivo = path.join(__dirname, "../uploads/", nombreArchivo);
   let logs: string[] = [];
-  let registro = false
+  let registro = false;
   await readXlsxFile(pathArchivo).then(async (rows) => {
     rows.shift();
 
@@ -102,9 +101,11 @@ const postExcelAlumnos = async (
         perfil_completado: false,
       };
       registro = await postAlumno(persona, materia, grupo);
-      (registro)
-        ?logs.push(`registro exitoso!!!`)
-        :logs.push(`El estudiante ${alumno[1]} ${alumno[2]} ya se encuentra registrado en otro grupo de esta materia`)
+      registro
+        ? logs.push(`registro exitoso!!!`)
+        : logs.push(
+            `El estudiante ${alumno[1]} ${alumno[2]} ya se encuentra registrado en otro grupo de esta materia`
+          );
     }
   });
   //* PREGUNTAMOS SI ESTE EXCEL EXISTE EN NUESTRO SERVIDOR Y LO BORRAMOS
@@ -116,12 +117,12 @@ const postExcelAlumnos = async (
 
 const existeAlumnoEnSistema = async (
   correo_institucional: string,
-  materia: string,
+  materia: string
 ): Promise<boolean[]> => {
   const [existeAlumno, existeAlumnoEnMateria] = await Promise.all([
     Persona.findByPk(correo_institucional),
     Persona.findAll({
-      where: { cod_rol:2, correo_institucional },
+      where: { cod_rol: 2, correo_institucional },
       include: [
         {
           model: Grupo,
@@ -145,11 +146,11 @@ const postAlumno = async (
   persona: PersonaResponse,
   materia: string,
   grupo: string
-):Promise<boolean>=> {
-  let registrado:boolean = false;
+): Promise<boolean> => {
+  let registrado: boolean = false;
   const [existeAlumno, existeAlumnoEnMateria] = await existeAlumnoEnSistema(
     persona.correo_institucional,
-    materia,
+    materia
   );
 
   if (!existeAlumno) {
@@ -173,23 +174,50 @@ const postAlumno = async (
   return registrado;
 };
 
-const postProyecto = async (cod_asignatura:string, grupo:string, proyecto:ProyectoResponse)=>{
-
-  //  TODO: VALIDAR QUE NO EXISTA YA ESE PROYECTO
-  //  TODO: CAMBIAR ESTO A UNA CONSULTA PREPARADA
-  //* FIXME: REGISTRAR PROYECTOS EN MINUSCULA 
-  const regProyecto = await Proyecto.create({...proyecto})
+const postProyecto = async (
+  cod_asignatura: string,
+  grupo: string,
+  proyecto: ProyectoResponse
+) => {
+  proyecto.nombres = proyecto.nombres.toLowerCase();
+  const regProyecto = await Proyecto.create({ ...proyecto });
   const findGrupo = await Grupo.findOne({
-    where:{
-      cod_asignatura, nombre:grupo
-    }
-  })
+    where: {
+      cod_asignatura,
+      nombre: grupo,
+    },
+  });
 
   const intermedia = await sequelize.query(
-    `insert into proyectos_grupo (proyectoCodProyecto, grupoCodGrupo) values(${regProyecto.cod_proyecto}, ${findGrupo?.cod_grupo})`)
+    `insert into proyectos_grupo (proyectoCodProyecto, grupoCodGrupo) values(${regProyecto.cod_proyecto}, ${findGrupo?.cod_grupo})`
+  );
+  return intermedia;
+};
+
+const getAlumnosProyecto = async (cod_asignatura:string, grupo:string, cod_proyecto:number)=>{
   
-    //* 👀 AUN NO ESTOY RETORNANDO NADA
-    console.log(intermedia);
+  const pro = await Grupo.findAll({
+    where:{cod_asignatura, nombre:grupo},
+    attributes:['cod_asignatura', 'nombre'],
+    include:[{
+      model:Proyecto,
+      where:{cod_proyecto},
+      required:true,
+      through:{
+        attributes:[]
+      },
+      include:[{
+        model:Persona,
+        attributes:['nombres', 'apellidos','codigo', 'img'],
+        required:true,
+        through:{
+          attributes:[]
+        }
+      }]
+    }]
+  })
+
+  return pro
 }
 
 export {
@@ -199,5 +227,6 @@ export {
   getAlumnos,
   postExcelAlumnos,
   postAlumno,
-  postProyecto
+  postProyecto,
+  getAlumnosProyecto
 };

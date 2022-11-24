@@ -2,6 +2,7 @@ import { Router } from "express";
 
 import {
   obtenerAlumnosMateriaGrupo,
+  obtenerAlumnosProyecto,
   obtenerMaterias,
   registrarExcelAlumnos,
   registrarGrupo,
@@ -62,13 +63,14 @@ router.post(
   registroAlumno
 );
 
-//* 👀 FUNCIONA PERO DEBO HACER MAS PRUEBAS Y ACOMODAR LA CONSULTA PREPARADA
-//* FIXME: VALIDAR QUE NO EXISTA YA EL PROYECTO QUE VOY A REGISTRAR
+//* 👀  FUNCIONA PERO DEBO HACER MAS PRUEBAS Y ACOMODAR LA CONSULTA PREPARADA
 router.post(
   "/proyectos/:asignatura/:grupo",
   [validarJWT, validarRolDocente],
   validarRegistroProyecto,
   registrarProyecto
 );
+
+router.get('/proyectos/:asignatura/:grupo/:cod_proyecto', obtenerAlumnosProyecto)
 
 export default router;
