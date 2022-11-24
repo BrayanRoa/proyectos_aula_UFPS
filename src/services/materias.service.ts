@@ -16,7 +16,7 @@ import Persona from "../db/models/Persona";
 import Grupo from "../db/models/Grupo";
 import { PersonaResponse } from "../interfaces/persona-response.interface";
 
-//* TODO: AQUI TENGO UNA DUDA, POR ALGÚN MOTIVO QUE NO RECUERDO CUANDO CREO LA MATERIA REGISTRO A LA PERSONA QUE LA CREO EN ELLA
+//* TODO:  AQUI TENGO UNA DUDA, POR ALGÚN MOTIVO QUE NO RECUERDO CUANDO CREO LA MATERIA REGISTRO A LA PERSONA QUE LA CREO EN ELLA
 const postMateria = async (materia: InscribirMateria, correo: string) => {
   await sequelize.query("CALL Add_Materia_Grupo_Persona(?,?,?,?,?)", {
     replacements: [

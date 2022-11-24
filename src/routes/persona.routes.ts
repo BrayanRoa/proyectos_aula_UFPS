@@ -7,9 +7,5 @@ const router = Router();
 
 router.patch("/:codigo", [validarJWT], validarPersona, actualizarPersona);
 
-// router.patch("/:codigo", [validarJWT], validarPersona, actualizarFotoPerfil);
-
-
-// router.post('/')
 
 export default router;
