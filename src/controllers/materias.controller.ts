@@ -6,7 +6,8 @@ import {
     postAlumno, 
     postExcelAlumnos, 
     postGrupo, 
-    postMateria } from "../services/materias.service";
+    postMateria, 
+    postProyecto} from "../services/materias.service";
 
 import { File } from "../interfaces/file-upload.interface";
 
@@ -101,10 +102,27 @@ const obtenerAlumnosMateriaGrupo = async(req:Request, res:Response)=>{
     }
 }
 
+const registrarProyecto = async(req:Request, res:Response)=>{
+    try {
+        const { asignatura, grupo } = req.params
+        const proyecto = req.body
+        const regProyecto = await postProyecto(asignatura, grupo, proyecto)
+        res.status(201).json({
+            regProyecto
+        })
+    } catch (error:any) {
+        res.status(400).json({
+            error:error.message
+        })
+    }
+}
+
 export {
     registroMateria, 
     registrarGrupo, 
     obtenerMaterias, 
     obtenerAlumnosMateriaGrupo, 
     registrarExcelAlumnos,
-    registroAlumno}
+    registroAlumno,
+    registrarProyecto
+}

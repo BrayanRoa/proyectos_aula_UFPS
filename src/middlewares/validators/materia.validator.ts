@@ -33,15 +33,12 @@ export const validarExcelEstudiantes = [
   },
 ]
 
-// export const validarRegistroAlumno = [
-//   check("nombres", "Los nombres son requeridos").not().isEmpty(),
-//   check("apellidos", "Los apellidos son requeridos").not().isEmpty(),
-//   check("correo_institucional").custom((correo_int) =>
-//     existeCorreoInstitucional(correo_int)
-//   ),
-//   check("codigo").custom((codigo) => existeCodigo(codigo)),
-//   check("cod_rol", "el rol es requerido").notEmpty(),
-//   (req: Request, res: Response, next: NextFunction) => {
-//     validarCampos(req, res, next);
-//   },
-// ]
+export const validarRegistroProyecto = [
+  param('asignatura').custom(cod => existeAsignatura(cod)),
+  param('grupo').custom(grupo => existeGrupo(grupo)),
+  (req: Request, res: Response, next: NextFunction) => {
+    validarCampos(req, res, next);
+  },
+]
+
+

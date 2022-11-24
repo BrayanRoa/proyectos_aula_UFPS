@@ -15,6 +15,9 @@ import { File } from "../interfaces/file-upload.interface";
 import Persona from "../db/models/Persona";
 import Grupo from "../db/models/Grupo";
 import { PersonaResponse } from "../interfaces/persona-response.interface";
+import { __String } from "typescript";
+import { ProyectoResponse } from '../interfaces/proyecto-response';
+import Proyecto from "../db/models/Proyecto";
 
 //* TODO:  AQUI TENGO UNA DUDA, POR ALGÚN MOTIVO QUE NO RECUERDO CUANDO CREO LA MATERIA REGISTRO A LA PERSONA QUE LA CREO EN ELLA
 const postMateria = async (materia: InscribirMateria, correo: string) => {
@@ -170,6 +173,25 @@ const postAlumno = async (
   return registrado;
 };
 
+const postProyecto = async (cod_asignatura:string, grupo:string, proyecto:ProyectoResponse)=>{
+
+  //  TODO: VALIDAR QUE NO EXISTA YA ESE PROYECTO
+  //  TODO: CAMBIAR ESTO A UNA CONSULTA PREPARADA
+  //* FIXME: REGISTRAR PROYECTOS EN MINUSCULA 
+  const regProyecto = await Proyecto.create({...proyecto})
+  const findGrupo = await Grupo.findOne({
+    where:{
+      cod_asignatura, nombre:grupo
+    }
+  })
+
+  const intermedia = await sequelize.query(
+    `insert into proyectos_grupo (proyectoCodProyecto, grupoCodGrupo) values(${regProyecto.cod_proyecto}, ${findGrupo?.cod_grupo})`)
+  
+    //* 👀 AUN NO ESTOY RETORNANDO NADA
+    console.log(intermedia);
+}
+
 export {
   postMateria,
   postGrupo,
@@ -177,4 +199,5 @@ export {
   getAlumnos,
   postExcelAlumnos,
   postAlumno,
+  postProyecto
 };

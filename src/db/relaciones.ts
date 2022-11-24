@@ -28,3 +28,7 @@ Proyecto.belongsToMany(Persona, {through: 'persona_proyecto', timestamps: false}
 //* UNO A MUCHOS
 Proyecto.hasMany(Avance, {foreignKey:'cod_proyecto'})
 Avance.belongsTo(Proyecto, {foreignKey: 'cod_proyecto'})
+
+//* MUCHOS A MUCHOS
+Proyecto.belongsToMany(Grupo, {through:'proyectos_grupo', timestamps:false})
+Grupo.belongsToMany(Proyecto, {through:'proyectos_grupo', timestamps:false})

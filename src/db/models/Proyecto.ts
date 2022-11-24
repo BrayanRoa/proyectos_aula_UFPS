@@ -1,6 +1,14 @@
 import { sequelize, Model, DataTypes } from "../conexion";
+import { ProyectoResponse } from '../../interfaces/proyecto-response';
 
-class Proyecto extends Model {}
+class Proyecto extends Model implements ProyectoResponse{
+  declare cod_proyecto: number;
+  declare nombres: string;
+  declare estado: string;
+  declare activo: boolean;
+  declare descripcion: string;
+  declare cantidad_alumnos: number;
+}
 
 Proyecto.init(
   {

@@ -5,6 +5,7 @@ import {
   obtenerMaterias,
   registrarExcelAlumnos,
   registrarGrupo,
+  registrarProyecto,
   registroAlumno,
   registroMateria,
 } from "../controllers/materias.controller";
@@ -13,6 +14,7 @@ import {
   validarMateria,
   registroGrupo,
   validarExcelEstudiantes,
+  validarRegistroProyecto,
 } from "../middlewares/validators/materia.validator";
 
 import { validarJWT } from "../middlewares/validar-jwt";
@@ -58,6 +60,15 @@ router.post(
   "/registroAlumno/:materia/:grupo",
   [validarJWT, validarRolDocente],
   registroAlumno
+);
+
+//* 👀 FUNCIONA PERO DEBO HACER MAS PRUEBAS Y ACOMODAR LA CONSULTA PREPARADA
+//* FIXME: VALIDAR QUE NO EXISTA YA EL PROYECTO QUE VOY A REGISTRAR
+router.post(
+  "/proyectos/:asignatura/:grupo",
+  [validarJWT, validarRolDocente],
+  validarRegistroProyecto,
+  registrarProyecto
 );
 
 export default router;
