@@ -4,9 +4,9 @@ import {
   existeAsignatura,
   existeGrupo,
   puedoAgregarGrupoMateria,
+  existeProyecto
 } from "../../helpers/db-validators";
 import { validarCampos } from "../validar-campos";
-import { existeProyecto } from '../../helpers/db-validators';
 
 export const validarMateria = [
   check("cod_asignatura").custom((cod) => existeAsignatura(cod, "materia")),
@@ -37,7 +37,16 @@ export const validarExcelEstudiantes = [
 export const validarRegistroProyecto = [
   param('asignatura').custom(cod => existeAsignatura(cod)),
   param('grupo').custom(grupo => existeGrupo(grupo)),
-  check('nombres').custom(proyecto => existeProyecto(proyecto)),
+  check('nombres').custom(proyecto => existeProyecto(proyecto, 'registro')),
+  (req: Request, res: Response, next: NextFunction) => {
+    validarCampos(req, res, next);
+  },
+]
+
+export const existeAlumnosProyecto = [
+  param('asignatura').custom(cod => existeAsignatura(cod)),
+  param('grupo').custom(grupo => existeGrupo(grupo)),
+  param('cod_proyecto').custom(proyecto => existeProyecto(proyecto, 'busqueda')),
   (req: Request, res: Response, next: NextFunction) => {
     validarCampos(req, res, next);
   },

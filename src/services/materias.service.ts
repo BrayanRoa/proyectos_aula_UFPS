@@ -194,31 +194,67 @@ const postProyecto = async (
   return intermedia;
 };
 
-const getAlumnosProyecto = async (cod_asignatura:string, grupo:string, cod_proyecto:number)=>{
-  
+const getAlumnosProyecto = async (
+  cod_asignatura: string,
+  grupo: string,
+  cod_proyecto: number
+) => {
   const pro = await Grupo.findAll({
-    where:{cod_asignatura, nombre:grupo},
-    attributes:['cod_asignatura', 'nombre'],
-    include:[{
-      model:Proyecto,
-      where:{cod_proyecto},
-      required:true,
-      through:{
-        attributes:[]
+    where: { cod_asignatura, nombre: grupo },
+    attributes: ["cod_asignatura", "nombre"],
+    include: [
+      {
+        model: Proyecto,
+        where: { cod_proyecto },
+        required: true,
+        through: {
+          attributes: [],
+        },
+        include: [
+          {
+            model: Persona,
+            attributes: ["nombres", "apellidos", "codigo", "img"],
+            required: true,
+            through: {
+              attributes: [],
+            },
+            include:[{
+              model:Asignatura,
+              required:true,
+              where:{cod_asignatura},
+              through:{
+                attributes:[]
+              }
+            }]
+          },
+        ],
       },
-      include:[{
-        model:Persona,
-        attributes:['nombres', 'apellidos','codigo', 'img'],
-        required:true,
-        through:{
-          attributes:[]
-        }
-      }]
-    }]
-  })
+    ],
+  });
 
-  return pro
-}
+  return pro;
+};
+
+const postAlumnoProyecto = async (
+  cod_proyecto: number,
+  correo_institucional: string
+) => {
+  const existe = await sequelize.query(
+    `select * from persona_proyecto 
+    where personaCorreoInstitucional = "${correo_institucional}" and proyectoCodProyecto = ${cod_proyecto}`
+  );
+
+  console.log(existe[0].length);
+  if (existe[0].length !== 0) {
+    throw new Error(
+      `La persona con correo institucional: ${correo_institucional} ya esta registrada en este proyecto`
+    );
+  }
+  await sequelize.query(
+    `insert into persona_proyecto (personaCorreoInstitucional, proyectoCodProyecto) 
+      values ("${correo_institucional}", ${cod_proyecto})`
+  );
+};
 
 export {
   postMateria,
@@ -228,5 +264,6 @@ export {
   postExcelAlumnos,
   postAlumno,
   postProyecto,
-  getAlumnosProyecto
+  getAlumnosProyecto,
+  postAlumnoProyecto,
 };

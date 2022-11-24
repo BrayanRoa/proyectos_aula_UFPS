@@ -5,6 +5,7 @@ import {
     getAlumnosProyecto, 
     getMaterias, 
     postAlumno, 
+    postAlumnoProyecto, 
     postExcelAlumnos, 
     postGrupo, 
     postMateria, 
@@ -124,7 +125,25 @@ const obtenerAlumnosProyecto = async (req:Request, res:Response)=>{
         const alumnosProyecto = await getAlumnosProyecto(asignatura, grupo, +cod_proyecto)
 
         res.status(200).json({
-            alumnosProyecto
+            personas:(alumnosProyecto.length === 0)
+                ?`No hay alumnos asignados al proyecto`
+                :alumnosProyecto
+        })
+    } catch (error:any) {
+        res.status(400).json({
+            err:error.message
+        })
+    }
+}
+
+const registroPersonaProyecto = async (req:Request, res:Response)=>{
+    try {
+        const { cod_proyecto } = req.body
+        const { correo_institucional } = req.persona
+        await postAlumnoProyecto(cod_proyecto, correo_institucional)
+
+        res.status(200).json({
+            msg:`Persona registrada con exito en el proyecto`
         })
     } catch (error:any) {
         res.status(400).json({
@@ -141,5 +160,6 @@ export {
     registrarExcelAlumnos,
     registroAlumno,
     registrarProyecto,
-    obtenerAlumnosProyecto
+    obtenerAlumnosProyecto,
+    registroPersonaProyecto
 }

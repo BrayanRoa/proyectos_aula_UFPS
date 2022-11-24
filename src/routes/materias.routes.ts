@@ -9,6 +9,7 @@ import {
   registrarProyecto,
   registroAlumno,
   registroMateria,
+  registroPersonaProyecto,
 } from "../controllers/materias.controller";
 
 import {
@@ -16,6 +17,7 @@ import {
   registroGrupo,
   validarExcelEstudiantes,
   validarRegistroProyecto,
+  existeAlumnosProyecto,
 } from "../middlewares/validators/materia.validator";
 
 import { validarJWT } from "../middlewares/validar-jwt";
@@ -43,9 +45,9 @@ router.post(
 //** AQUI SON TODAS LAS MATERIAS QUE HAY EN EL SISTEMA, SOLO DOCENTES CON UN JWT VÁLIDO */
 router.get("/", [validarJWT, validarRolDocente], obtenerMaterias);
 
-//** TODO: DEBERIA HACER UNA RUTA DONDE EL ALUMNO SOLO PUEDA VER EL LISTADO DE SUS MATERIAS */
+//* TODO: DEBERIA HACER UNA RUTA DONDE EL ALUMNO SOLO PUEDA VER EL LISTADO DE SUS MATERIAS */
 
-//** TODO: SOLO PUEDEN VER LA LISTA LOS DOCENTES? O TAMBIEN DEBERIA DEJARLO PARA QUE TODOS VEAN EL LISTADO DE ESTUDIATES */
+//* TODO: SOLO PUEDEN VER LA LISTA LOS DOCENTES? O TAMBIEN DEBERIA DEJARLO PARA QUE TODOS VEAN EL LISTADO DE ESTUDIATES */
 router.get("/:materia/:grupo", [validarJWT], obtenerAlumnosMateriaGrupo);
 
 //** SE REGISTRA EL LISTADO DE ALUMNOS, SOLO LO PUEDE HACER UN DOCENTE */
@@ -71,6 +73,18 @@ router.post(
   registrarProyecto
 );
 
-router.get('/proyectos/:asignatura/:grupo/:cod_proyecto', obtenerAlumnosProyecto)
+//* OBTENER LOS ALUMNOS REGISTRADOS EN UN PROYECTO
+router.get(
+  "/proyectos/:asignatura/:grupo/:cod_proyecto",
+  [validarJWT],
+  existeAlumnosProyecto,
+  obtenerAlumnosProyecto
+);
+
+//* REGISTRAR PERSONA EN PROYECTO
+//* FIXME: NO ESTOY VALIDANDO QUE ESE ALUMNO ESTE EN ESA MATERIA Y EN ESE GRUPO, DEBO HACERLO?
+//* TODO: DEBERIA COLOCARLE UN ESTADO A LA TABLA PERSONA_PROYECTO? ESTO PARA SABER SI UNA PERSONA SIGUE EN EL PROYECTO O SI SE SALIO
+//* TODO: DEBERIA VALIDAR QUE LA PERSONA NO ESTE INSCRITA EN MAS DE UN PROYECTO EN ESA ASIGNATURA
+router.post('/proyectos/registrarAlumno',[validarJWT], registroPersonaProyecto)
 
 export default router;
