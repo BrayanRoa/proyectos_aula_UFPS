@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import { 
     getAlumnos, 
     getAlumnosProyecto, 
+    getListadoProyectos, 
     getMaterias, 
     postAlumno, 
     postAlumnoProyecto, 
@@ -54,9 +55,8 @@ const registrarExcelAlumnos = async (req:Request, res:Response)=>{
         })
         
     } catch (error:any) {
-        console.log(error);
         res.status(400).json({
-            err:error.message
+            error:error.message
         })
     }
 }
@@ -71,9 +71,8 @@ const registroAlumno = async (req:Request, res:Response)=>{
                 :`Este estudiante ya se encuentra registrado/a en otro grupo de esta materia`
         })
     } catch (error:any) {
-        console.log(error);
         res.status(400).json({
-            err:error.message
+            error:error.message
         })
     }
 }
@@ -131,23 +130,38 @@ const obtenerAlumnosProyecto = async (req:Request, res:Response)=>{
         })
     } catch (error:any) {
         res.status(400).json({
-            err:error.message
+            error:error.message
         })
     }
 }
 
 const registroPersonaProyecto = async (req:Request, res:Response)=>{
     try {
-        const { cod_proyecto } = req.body
+        const { cod_proyecto, cod_asignatura, grupo } = req.body
         const { correo_institucional } = req.persona
-        await postAlumnoProyecto(cod_proyecto, correo_institucional)
+        await postAlumnoProyecto(cod_proyecto, correo_institucional, cod_asignatura, grupo)
 
         res.status(200).json({
             msg:`Persona registrada con exito en el proyecto`
         })
     } catch (error:any) {
         res.status(400).json({
-            err:error.message
+            error:error.message
+        })
+    }
+}
+
+const obtenerListadoProyectos = async(req:Request, res:Response)=>{
+    try {
+        const { asignatura, grupo } = req.params
+        const proyectos = await getListadoProyectos(asignatura, grupo)
+
+        res.status(200).json({
+            proyectos
+        })
+    } catch (error:any) {
+        res.status(400).json({
+            error:error.message
         })
     }
 }
@@ -161,5 +175,6 @@ export {
     registroAlumno,
     registrarProyecto,
     obtenerAlumnosProyecto,
-    registroPersonaProyecto
+    registroPersonaProyecto,
+    obtenerListadoProyectos
 }

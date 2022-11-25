@@ -3,6 +3,7 @@ import { Router } from "express";
 import {
   obtenerAlumnosMateriaGrupo,
   obtenerAlumnosProyecto,
+  obtenerListadoProyectos,
   obtenerMaterias,
   registrarExcelAlumnos,
   registrarGrupo,
@@ -81,10 +82,11 @@ router.get(
   obtenerAlumnosProyecto
 );
 
+router.get('/proyectos/:asignatura/:grupo', obtenerListadoProyectos)
+
 //* REGISTRAR PERSONA EN PROYECTO
-//* FIXME: NO ESTOY VALIDANDO QUE ESE ALUMNO ESTE EN ESA MATERIA Y EN ESE GRUPO, DEBO HACERLO?
-//* TODO: DEBERIA COLOCARLE UN ESTADO A LA TABLA PERSONA_PROYECTO? ESTO PARA SABER SI UNA PERSONA SIGUE EN EL PROYECTO O SI SE SALIO
-//* TODO: DEBERIA VALIDAR QUE LA PERSONA NO ESTE INSCRITA EN MAS DE UN PROYECTO EN ESA ASIGNATURA
+// TODO: DEBERIA COLOCARLE UN ESTADO A LA TABLA PERSONA_PROYECTO? ESTO PARA SABER SI UNA PERSONA SIGUE EN EL PROYECTO O SI SE SALIO
+// TODO: VALIDAR QUE LA ASIGNATURA Y EL GRUPO EXISTA
 router.post('/proyectos/registrarAlumno',[validarJWT], registroPersonaProyecto)
 
 export default router;

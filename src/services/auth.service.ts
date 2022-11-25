@@ -2,12 +2,9 @@ import { sequelize } from "../db/conexion";
 import Persona from "../db/models/Persona";
 import { generarJWT } from "../helpers/generar-jwt";
 
-import {
-  ProfesorGrupo,
-} from "../interfaces/persona-response.interface";
+import { ProfesorGrupo } from "../interfaces/persona-response.interface";
 
 import Grupo from "../db/models/Grupo";
-
 
 const loginPersona = async (correo_institucional: string) => {
   let persona = await Persona.findByPk(correo_institucional);
@@ -21,8 +18,8 @@ const loginPersona = async (correo_institucional: string) => {
 };
 
 const postProfesor = async (profesor: ProfesorGrupo): Promise<string> => {
-  const { correo_institucional, grupo, materia } = profesor
-  const existe = await existeProfesorEnGrupo(profesor)
+  const { correo_institucional, grupo, materia } = profesor;
+  const existe = await existeProfesorEnGrupo(profesor);
   if (!existe) {
     await Persona.create({ ...profesor });
     await sequelize.query("CALL Materia_Grupo_Estudiante(?,?,?)", {
@@ -30,9 +27,9 @@ const postProfesor = async (profesor: ProfesorGrupo): Promise<string> => {
     });
   }
 
-  return existe 
+  return existe
     ? `Ya hay un docente asignado para el grupo ${profesor.grupo}  de la asignatura ${profesor.materia}`
-    : `Docente registrado en la materia ${profesor.materia} grupo:${profesor.grupo}`
+    : `Docente registrado en la materia ${profesor.materia} grupo:${profesor.grupo}`;
 };
 
 const existeProfesorEnGrupo = async (
@@ -53,8 +50,7 @@ const existeProfesorEnGrupo = async (
       },
     ],
   });
-  return (existe.length === 0) ? false : true;
+  return existe.length === 0 ? false : true;
 };
-
 
 export { loginPersona, postProfesor };

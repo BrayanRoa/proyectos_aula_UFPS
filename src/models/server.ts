@@ -2,9 +2,9 @@
 import express, { Application } from "express";
 import cors from "cors";
 import fileUpload from "express-fileupload";
-import { sequelize } from "../db/conexion";
 
 //* IMPORTACIONES INTERNAS
+import { sequelize } from "../db/conexion";
 import "../db/relaciones";
 import "../helpers/expandir.express";
 import authRouter from "../routes/auth.routes";
@@ -56,7 +56,7 @@ export class Server {
   private routes() {
     this.app.use(this.rutas.auth, authRouter);
     this.app.use(this.rutas.materias, materiasRouter);
-    this.app.use(this.rutas.persona, personaRouter) //* TODO: COLOCAR LA RUTA AQUÍ
+    this.app.use(this.rutas.persona, personaRouter) 
   }
 
   listen() {

@@ -108,7 +108,6 @@ const postExcelAlumnos = async (
           );
     }
   });
-  //* PREGUNTAMOS SI ESTE EXCEL EXISTE EN NUESTRO SERVIDOR Y LO BORRAMOS
   if (fs.existsSync(pathArchivo)) {
     fs.unlinkSync(pathArchivo);
   }
@@ -199,7 +198,7 @@ const getAlumnosProyecto = async (
   grupo: string,
   cod_proyecto: number
 ) => {
-  const pro = await Grupo.findAll({
+  const proyecto = await Grupo.findAll({
     where: { cod_asignatura, nombre: grupo },
     attributes: ["cod_asignatura", "nombre"],
     include: [
@@ -218,33 +217,39 @@ const getAlumnosProyecto = async (
             through: {
               attributes: [],
             },
-            include:[{
-              model:Asignatura,
-              required:true,
-              where:{cod_asignatura},
-              through:{
-                attributes:[]
-              }
-            }]
+            include: [
+              {
+                model: Asignatura,
+                required: true,
+                where: { cod_asignatura },
+                through: {
+                  attributes: [],
+                },
+              },
+            ],
           },
         ],
       },
     ],
   });
 
-  return pro;
+  return proyecto;
 };
 
 const postAlumnoProyecto = async (
   cod_proyecto: number,
-  correo_institucional: string
+  correo_institucional: string,
+  materia: string,
+  grupo: string
 ) => {
+  await existeAlumnoGrupo(correo_institucional, materia, grupo);
+  await tieneProyecto(correo_institucional,materia, grupo);
+
   const existe = await sequelize.query(
     `select * from persona_proyecto 
     where personaCorreoInstitucional = "${correo_institucional}" and proyectoCodProyecto = ${cod_proyecto}`
   );
 
-  console.log(existe[0].length);
   if (existe[0].length !== 0) {
     throw new Error(
       `La persona con correo institucional: ${correo_institucional} ya esta registrada en este proyecto`
@@ -254,6 +259,94 @@ const postAlumnoProyecto = async (
     `insert into persona_proyecto (personaCorreoInstitucional, proyectoCodProyecto) 
       values ("${correo_institucional}", ${cod_proyecto})`
   );
+};
+
+const existeAlumnoGrupo = async (
+  correo_institucional: string,
+  materia: string,
+  grupo: string
+) => {
+  const existe = await Persona.findOne({
+    where: { correo_institucional },
+    include: [
+      {
+        model: Grupo,
+        where: { cod_asignatura: materia, nombre: grupo },
+        required: true,
+        through: {
+          attributes: [],
+        },
+      },
+    ],
+  });
+
+  if (!existe) {
+    throw new Error(
+      `El alumno no esta registrado en el grupo: ${grupo} de la materia: ${materia}`
+    );
+  }
+};
+
+const getListadoProyectos = async (cod_asignatura: string, grupo: string) => {
+  const proyectos = await Grupo.findAll({
+    where: { cod_asignatura, nombre: grupo },
+    include: [
+      {
+        model: Proyecto,
+        required: true,
+        through: {
+          attributes: [],
+        },
+      },
+    ],
+  });
+
+  return proyectos;
+};
+
+const tieneProyecto = async (
+  correo_institucional: string,
+  cod_asignatura: string,
+  grupo: string
+) => {
+  const persona = await Grupo.findAll({
+    where: { cod_asignatura, nombre: grupo },
+    attributes: ["cod_asignatura", "nombre"],
+    include: [
+      {
+        model: Proyecto,
+        required: true,
+        through: {
+          attributes: [],
+        },
+        include: [
+          {
+            model: Persona,
+            where: { correo_institucional },
+            attributes: ["nombres", "apellidos", "codigo", "img"],
+            required: true,
+            through: {
+              attributes: [],
+            },
+            include: [
+              {
+                model: Asignatura,
+                required: true,
+                where: { cod_asignatura },
+                through: {
+                  attributes: [],
+                },
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  });
+
+  if(persona.length !== 0){
+    throw new Error(`El alumno ya tiene un proyecto asignado en esta materia`)
+  }
 };
 
 export {
@@ -266,4 +359,5 @@ export {
   postProyecto,
   getAlumnosProyecto,
   postAlumnoProyecto,
+  getListadoProyectos,
 };
