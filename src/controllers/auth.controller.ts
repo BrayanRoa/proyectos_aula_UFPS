@@ -20,12 +20,10 @@ const registroProfesor = async (req: Request, res: Response)=>{
     try {
         // const { materia, grupo, ...persona } = req.body
         const registrar = await postProfesor(req.body)
-        console.log('ey ey')
         return res.status(201).json({
             registrar
         })
     } catch (error:any) {
-      console.log(error);
         res.status(400).json({
             err:error.message,
         })

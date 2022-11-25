@@ -28,7 +28,7 @@ const postProfesor = async (profesor: ProfesorGrupo): Promise<string> => {
   }
 
   return existe
-    ? `Ya hay un docente asignado para el grupo ${profesor.grupo}  de la asignatura ${profesor.materia}`
+    ? `Ya hay un docente asignado para el grupo ${profesor.grupo} de la asignatura ${profesor.materia}`
     : `Docente registrado en la materia ${profesor.materia} grupo:${profesor.grupo}`;
 };
 
