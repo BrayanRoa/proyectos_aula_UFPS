@@ -5,6 +5,7 @@ import { generarJWT } from "../helpers/generar-jwt";
 import { ProfesorGrupo } from "../interfaces/persona-response.interface";
 
 import Grupo from "../db/models/Grupo";
+// import { envioCorreo } from "../helpers/enviar-correos";
 
 const loginPersona = async (correo_institucional: string) => {
   let persona = await Persona.findByPk(correo_institucional);
@@ -25,7 +26,11 @@ const postProfesor = async (profesor: ProfesorGrupo): Promise<string> => {
     await sequelize.query("CALL Materia_Grupo_Estudiante(?,?,?)", {
       replacements: [correo_institucional, grupo, materia],
     });
+    //* TODO: YA ESTÁ LISTO, QUEDA COMENTADO PARA NO MANDAR CORREOS DE MANERA INNECESARIA
+    // await envioCorreo(profesor, materia, grupo)
   }
+
+
 
   return existe
     ? `Ya hay un docente asignado para el grupo ${profesor.grupo} de la asignatura ${profesor.materia}`
