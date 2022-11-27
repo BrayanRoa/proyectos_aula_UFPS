@@ -355,12 +355,12 @@ const tieneProyecto = async (
 export {
   postMateria,
   postGrupo,
-  getMaterias,
-  getAlumnos,
   postExcelAlumnos,
   postAlumno,
   postProyecto,
-  getAlumnosProyecto,
   postAlumnoProyecto,
+  getMaterias,
+  getAlumnos,
+  getAlumnosProyecto,
   getListadoProyectos,
 };
