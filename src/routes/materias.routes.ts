@@ -19,6 +19,7 @@ import {
   validarExcelEstudiantes,
   validarRegistroProyecto,
   existeAlumnosProyecto,
+  existeMateriaGrupo,
 } from "../middlewares/validators/materia.validator";
 
 import { validarJWT } from "../middlewares/validar-jwt";
@@ -28,6 +29,7 @@ import { validarRolDocente } from "../middlewares/validar-campos";
 const router = Router();
 
 //** SOLO DOCENTES Y NECESITA PASARLE UN JWT */
+//* TODO: ME PARECE MEJOR INSCRIBIR LA MATERIA Y DEJAR OTRO ENLACE PARA ASIGNARLE PROFESOR
 router.post(
   "/",
   [validarJWT, validarRolDocente], //👮
@@ -49,11 +51,14 @@ router.get("/", [validarJWT, validarRolDocente], obtenerMaterias);
 //* TODO: DEBERIA HACER UNA RUTA DONDE EL ALUMNO SOLO PUEDA VER EL LISTADO DE SUS MATERIAS */
 
 //* TODO: SOLO PUEDEN VER LA LISTA LOS DOCENTES? O TAMBIEN DEBERIA DEJARLO PARA QUE TODOS VEAN EL LISTADO DE ESTUDIATES */
-//* TODO: VALIDAR QUE EXISTA LA MATERIA Y EL GRUPO
-router.get("/:materia/:grupo", [validarJWT], obtenerAlumnosMateriaGrupo);
+router.get(
+  "/:cod_asignatura/:nombreGrupo",
+  [validarJWT],
+  existeMateriaGrupo,
+  obtenerAlumnosMateriaGrupo
+);
 
 //** SE REGISTRA EL LISTADO DE ALUMNOS, SOLO LO PUEDE HACER UN DOCENTE */
-//* FIXME: NO ESTA FUNCIONANDO
 router.post(
   "/registroAlumnos/:asignatura/:grupo",
   [validarJWT, validarRolDocente, existeArchivo],
@@ -69,7 +74,6 @@ router.post(
 );
 
 //* 👀  FUNCIONA PERO DEBO HACER MAS PRUEBAS Y ACOMODAR LA CONSULTA PREPARADA
-//* FIXME: DEBO VALIDAR QUE EXISTA LA MATERIA Y EL GRUPO 
 router.post(
   "/proyectos/:asignatura/:grupo",
   [validarJWT, validarRolDocente],
@@ -85,12 +89,20 @@ router.get(
   obtenerAlumnosProyecto
 );
 
-//* FIXME: HACER LAS RESPECTIVAS VALIDACIONES
-router.get('/proyectos/:asignatura/:grupo', obtenerListadoProyectos)
+router.get(
+  "/proyectos/:cod_asignatura/:nombreGrupo",
+  [validarJWT],
+  existeMateriaGrupo,
+  obtenerListadoProyectos
+);
 
 //* REGISTRAR PERSONA EN PROYECTO
 // TODO: DEBERIA COLOCARLE UN ESTADO A LA TABLA PERSONA_PROYECTO? ESTO PARA SABER SI UNA PERSONA SIGUE EN EL PROYECTO O SI SE SALIO
-// TODO: VALIDAR QUE LA ASIGNATURA Y EL GRUPO EXISTA
-router.post('/proyectos/registrarAlumno',[validarJWT], registroPersonaProyecto)
+router.post(
+  "/proyectos/registrarAlumno",
+  [validarJWT],
+  existeMateriaGrupo,
+  registroPersonaProyecto
+);
 
 export default router;

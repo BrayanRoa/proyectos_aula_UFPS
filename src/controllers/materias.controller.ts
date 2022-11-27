@@ -93,9 +93,13 @@ const obtenerMaterias = async(_req:Request, res:Response)=>{
 
 const obtenerAlumnosMateriaGrupo = async(req:Request, res:Response)=>{
     try {
-        const { materia, grupo } = req.params
-        const asignatura = await getAlumnos(materia, grupo);
-        res.status(200).json(...asignatura)
+        const { cod_asignatura, nombreGrupo } = req.params
+        const asignatura = await getAlumnos(cod_asignatura, nombreGrupo);
+        res.status(200).json({
+            alumnos:(asignatura.length === 0)
+                ?`No hay alumnos en la materia ${cod_asignatura}`
+                :asignatura
+        })
     } catch (error:any) {
         res.status(400).json({
             error:error.message
@@ -153,11 +157,13 @@ const registroPersonaProyecto = async (req:Request, res:Response)=>{
 
 const obtenerListadoProyectos = async(req:Request, res:Response)=>{
     try {
-        const { asignatura, grupo } = req.params
-        const proyectos = await getListadoProyectos(asignatura, grupo)
+        const { cod_asignatura, nombreGrupo } = req.params
+        const proyectos = await getListadoProyectos(cod_asignatura, nombreGrupo)
 
         res.status(200).json({
-            proyectos
+            proyectos:(proyectos.length === 0)
+                ?`No hay proyectos en la materia ${cod_asignatura}`
+                :proyectos
         })
     } catch (error:any) {
         res.status(400).json({
