@@ -49,9 +49,11 @@ router.get("/", [validarJWT, validarRolDocente], obtenerMaterias);
 //* TODO: DEBERIA HACER UNA RUTA DONDE EL ALUMNO SOLO PUEDA VER EL LISTADO DE SUS MATERIAS */
 
 //* TODO: SOLO PUEDEN VER LA LISTA LOS DOCENTES? O TAMBIEN DEBERIA DEJARLO PARA QUE TODOS VEAN EL LISTADO DE ESTUDIATES */
+//* TODO: VALIDAR QUE EXISTA LA MATERIA Y EL GRUPO
 router.get("/:materia/:grupo", [validarJWT], obtenerAlumnosMateriaGrupo);
 
 //** SE REGISTRA EL LISTADO DE ALUMNOS, SOLO LO PUEDE HACER UN DOCENTE */
+//* FIXME: NO ESTA FUNCIONANDO
 router.post(
   "/registroAlumnos/:asignatura/:grupo",
   [validarJWT, validarRolDocente, existeArchivo],
@@ -67,6 +69,7 @@ router.post(
 );
 
 //* 👀  FUNCIONA PERO DEBO HACER MAS PRUEBAS Y ACOMODAR LA CONSULTA PREPARADA
+//* FIXME: DEBO VALIDAR QUE EXISTA LA MATERIA Y EL GRUPO 
 router.post(
   "/proyectos/:asignatura/:grupo",
   [validarJWT, validarRolDocente],
@@ -82,6 +85,7 @@ router.get(
   obtenerAlumnosProyecto
 );
 
+//* FIXME: HACER LAS RESPECTIVAS VALIDACIONES
 router.get('/proyectos/:asignatura/:grupo', obtenerListadoProyectos)
 
 //* REGISTRAR PERSONA EN PROYECTO
