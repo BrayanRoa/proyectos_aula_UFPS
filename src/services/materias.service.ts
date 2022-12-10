@@ -17,7 +17,7 @@ import Grupo from "../db/models/Grupo";
 import { PersonaResponse } from "../interfaces/persona-response.interface";
 import { ProyectoResponse } from "../interfaces/proyecto-response";
 import Proyecto from "../db/models/Proyecto";
-// import { envioCorreo } from "../helpers/enviar-correos";
+import { envioCorreo } from "../helpers/enviar-correos";
 
 //* TODO:  AQUI TENGO UNA DUDA, POR ALGÚN MOTIVO QUE NO RECUERDO CUANDO CREO LA MATERIA REGISTRO A LA PERSONA QUE LA CREO EN ELLA
 const postMateria = async (materia: InscribirMateria, correo: string) => {
@@ -170,8 +170,7 @@ const postAlumno = async (
       replacements: [persona.correo_institucional, grupo, materia],
     });
     registrado = true;
-    //* TODO: YA ESTÁ LISTO, QUEDA COMENTADO PARA NO MANDAR CORREOS DE MANERA INNECESARIA
-    // await envioCorreo(persona, materia, grupo) 
+    await envioCorreo(persona, materia, grupo) 
   }
   return registrado;
 };

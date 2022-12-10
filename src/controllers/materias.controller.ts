@@ -71,6 +71,7 @@ const registroAlumno = async (req:Request, res:Response)=>{
                 :`Este estudiante ya se encuentra registrado/a en otro grupo de esta materia`
         })
     } catch (error:any) {
+        console.log(error);
         res.status(400).json({
             error:error.message
         })

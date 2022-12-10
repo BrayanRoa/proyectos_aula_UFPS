@@ -1,11 +1,10 @@
 import { PersonaResponse } from "../interfaces/persona-response.interface";
 import sgMail from "./mailer";
 
-//* FIXME: VER COMO PUEDO COLOCAR UNA PLANTILLA DE HTML AQUÍ
 export const envioCorreo = async (
   persona: PersonaResponse,
-  materia: string,
-  grupo: string
+  _materia: string,
+  _grupo: string
 ) => {
   const msg = {
     to: persona.correo_institucional, // Change to your recipient
@@ -13,20 +12,23 @@ export const envioCorreo = async (
     subject: "Disney Rest API",
     text: `Hi ${persona.nombres} ${persona.apellidos}`,
     html: `
-          <h1>BIENVENIDO AL SISTEMA DE GESTION DE PROYECTOS DE LA UFPS</h1>
-
-          <div>
-            <p align="center">
-                <a href="https://ingsistemas.cloud.ufps.edu.co/" target="blank"><img src="https://ww2.ufps.edu.co/public/archivos/elementos_corporativos/logo-horizontal.jpg" width="400" alt="UFPS Logo" /></a>
+    <body style="width: 800px">
+      <div style="background-color: #d12f50; width: 100%; padding: 3rem 0;">
+        <div style="text-align: center; background-color: #ffffff; margin: 0 auto; width: 80%; border-radius: 8px;">
+            <img style="margin-top: 3rem; width: 190px"
+                src="https://ww2.ufps.edu.co/public/archivos/elementos_corporativos/logoufps.png" alt="logo">
+            <p style="margin: 1rem 0; font-size: 25px;">Confirmación de cuenta</p>
+            <p style="color: #424242;">Has sido registrado en la plataforma APA (Adminstración de proyectos de aula)<br>Puedes ingresar dando click en el siguiente botón.
             </p>
+            <div style="margin: 2rem auto; width: 120px; background-color: #4f46e5; padding: 8px; border-radius: 6px; ">
+                <a style="color: #ffffff; text-decoration: none" href="">Continuar</a>
+            </div>
+            <div style="width: 100%; border-top: 2px solid #a5b4fc; padding: 1rem 0">
+                <p>Copyright © 2022 Universidad Francisco De Paula Santander <br> Todos los derechos reservados.</p>
+            </div>
         </div>
-
-          <strong>Hola ${persona.nombres} ${persona.apellidos}, El siguiente correo es para notificarle que ha sido registrado en la materia: ${materia} grupo ${grupo}, ingresa a la plataforma y completa tus datos de perfil si aún no lo has hecho 
-
-          <a href="https://ingsistemas.cloud.ufps.edu.co/" target="blank"><img src="https://ww2.ufps.edu.co/public/archivos/elementos_corporativos/logo-horizontal.jpg" width="400" alt="UFPS Logo" />Ir a la plataforma</a>
-          </strong>
-           hope you're well
-          `,
+      </div>
+    </body>`,
   };
 
   await sgMail

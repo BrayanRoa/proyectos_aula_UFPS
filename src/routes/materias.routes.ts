@@ -20,6 +20,7 @@ import {
   validarRegistroProyecto,
   existeAlumnosProyecto,
   existeMateriaGrupo,
+  codigoPersona
 } from "../middlewares/validators/materia.validator";
 
 import { validarJWT } from "../middlewares/validar-jwt";
@@ -70,6 +71,7 @@ router.post(
 router.post(
   "/registroAlumno/:materia/:grupo",
   [validarJWT, validarRolDocente],
+  codigoPersona,
   registroAlumno
 );
 
